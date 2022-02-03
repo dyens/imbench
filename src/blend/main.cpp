@@ -3,8 +3,8 @@
 #include "blend/qt.h"
 
 
-const char* IM1 = "assets/cam_image.png";
-const char* IM2 = "assets/semseg_image.png";
+const char* IM1 = "assets/cpp.png";
+const char* IM2 = "assets/rust.png";
 
 void BM_OpencvBlend(benchmark::State& state, const char* im1, const char* im2)
 {
@@ -17,6 +17,19 @@ void BM_OpencvBlend(benchmark::State& state, const char* im1, const char* im2)
 }
 
 BENCHMARK_CAPTURE(BM_OpencvBlend, , IM1, IM2);
+
+void BM_OpencvGPUBlend(benchmark::State& state, const char* im1, const char* im2)
+{
+  auto args = blend::opencv::gpu::prepare(im1, im2);
+
+  for (auto _ : state)
+  {
+    blend::opencv::gpu::blend(args);
+  }
+}
+
+BENCHMARK_CAPTURE(BM_OpencvGPUBlend, , IM1, IM2);
+
 
 void BM_QTBlend(benchmark::State& state, const char* im1, const char* im2)
 {
