@@ -1,5 +1,9 @@
-cmake_minimum_required (VERSION 2.8.11)
+cmake_minimum_required (VERSION 3.0.0)
 project (IMBENCH)
+
+
+ 
+add_compile_options( -mmmx -msse -msse2 -msse3 -msse4 -m3dnow)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,10 +14,8 @@ include_directories(include)
 find_package(benchmark REQUIRED)
 # find_package(OpenCV REQUIRED)
 
-# /home/dyens/dev/external/opencv/build/
-SET(CVPATH "cvpath" CACHE PATH "Opencv path")
 
-find_package(OpenCV  REQUIRED PATHS ${CVPATH} NO_DEFAULT_PATH)
+find_package(OpenCV  REQUIRED PATHS /home/dyens/dev/external/opencv/build/ NO_DEFAULT_PATH)
 find_package(Qt6 COMPONENTS Core Widgets Multimedia Qml REQUIRED)
 
 find_package(PkgConfig)
@@ -37,6 +39,14 @@ target_link_libraries(blend_check_qt
 )
 
 
+add_executable(blend_check_pure
+ src/blend/pure.cpp
+ src/blend/check_pure.cpp
+)
+target_link_libraries(blend_check_pure
+  Qt6::Multimedia
+)
+
 add_executable(blend_check_thrust
  src/blend/thrust.cpp
  src/blend/check_thrust.cpp
@@ -46,6 +56,7 @@ add_executable(blend_check_thrust
 add_executable(blend
  src/blend/opencv.cpp
  src/blend/qt.cpp
+ src/blend/pure.cpp
  src/blend/main.cpp
 )
 target_link_libraries(blend benchmark::benchmark)
